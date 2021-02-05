@@ -1,6 +1,6 @@
 {
   "name": "babel-images",
-  "version": "1.0.0",
+  "version": "0.1.0-rc1",
   "license": "MIT",
   "author": "Jedrzej Ginter <dzeejj@gmail.com> (https://github.com/jedrzejginter)",
   "main": "index.js",
@@ -12,10 +12,15 @@
     "lint": "yarn run eslint .",
     "typecheck": "tsc --noEmit"
   },
+  "files": [
+    "babel-plugin.js",
+    "resizer.js",
+    "types.d.ts"
+  ],
   "dependencies": {
     "hasha": "^5.2.2",
     "sharp": "^0.27.1",
-    "shell-quote": "1.7.2"
+    "shell-quote": "^1.7.2"
   },
   "devDependencies": {
     "@babel/cli": "7.12.13",

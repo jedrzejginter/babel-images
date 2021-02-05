@@ -14,5 +14,4 @@ jobs:
         with:
           install-command: yarn
       - run: yarn run lint
-      - run: mkdir out
       - run: npx babel test.js

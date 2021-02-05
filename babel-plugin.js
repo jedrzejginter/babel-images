@@ -1,9 +1,17 @@
 const { execSync } = require('child_process');
+const { mkdirSync } = require('fs');
 const { join } = require('path');
 const { quote } = require('shell-quote');
 
-module.exports = function plugin(babel) {
+module.exports = function plugin(babel, options) {
   const { types: t } = babel;
+
+  const {
+    outDir: OUT_DIR = join(process.cwd(), 'out'),
+    resolveDir: RESOLVE_DIR = process.cwd(),
+  } = options;
+
+  mkdirSync(OUT_DIR, { recursive: true });
 
   return {
     visitor: {
@@ -18,22 +26,27 @@ module.exports = function plugin(babel) {
         }
 
         const defSpec = node.specifiers[0];
-        const filenameIn = node.source.value.slice(4);
+        const filenamePath = node.source.value.slice(4);
+
+        const [filenameIn, query = ''] = filenamePath.split('?');
 
         const r = execSync(
           `node ${join(__dirname, 'resizer.js')} ${quote([
-            join(process.cwd(), filenameIn),
-            join(process.cwd(), 'out'),
+            join(RESOLVE_DIR, filenameIn),
+            join(OUT_DIR),
+            query,
           ])}`,
+          { stderr: 'inherit' },
         );
+
         const d = JSON.parse(r.toString());
 
         const o = t.objectExpression([
           t.objectProperty(t.identifier('height'), t.numericLiteral(d.height)),
           t.objectProperty(t.identifier('width'), t.numericLiteral(d.width)),
           t.objectProperty(t.identifier('bytes'), t.numericLiteral(d.bytes)),
-          t.objectProperty(t.identifier('base64'), t.stringLiteral(d.base64)),
           t.objectProperty(t.identifier('hash'), t.stringLiteral(d.hash)),
+          t.objectProperty(t.identifier('format'), t.stringLiteral(d.format)),
           t.objectProperty(
             t.identifier('filename'),
             t.stringLiteral(d.filename),

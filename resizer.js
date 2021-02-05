@@ -9,17 +9,33 @@ function hasOwn(o, p) {
   return Object.prototype.hasOwnProperty.call(o, p);
 }
 
+const knownFormats = ['png', 'jpeg', 'tiff'];
+
 (async () => {
   const query = querystring.parse(queryStr);
   const parsed = parse(filenameIn);
   let f = await sharp(filenameIn);
+  const originBuf = await f.toBuffer();
 
   if (hasOwn(query, 'width')) {
     f = f.resize(Number(query.width));
   }
 
   if (hasOwn(query, 'quality')) {
-    f = f.jpeg({ quality: Number(query.quality) });
+    const originMeta = await sharp(originBuf).metadata();
+    const quality = Number(query.quality);
+
+    if (originMeta.format === 'png') {
+      f = f.png({ quality });
+    } else if (originMeta.format === 'tiff') {
+      f = f.tiff({ quality });
+    } else {
+      f = f.jpeg({ quality });
+    }
+  }
+
+  if (hasOwn(query, 'format') && knownFormats.includes(query.format)) {
+    f = f.toFormat(query.format);
   }
 
   const buf = await f.toBuffer();

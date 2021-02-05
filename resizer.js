@@ -1,6 +1,6 @@
+const hasha = require('hasha');
 const { join, parse } = require('path');
 const sharp = require('sharp');
-const hasha = require('hasha');
 
 const [filenameIn, outDir] = process.argv.slice(2);
 

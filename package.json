@@ -1,27 +1,26 @@
 {
   "name": "babel-images",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "Jedrzej Ginter <dzeejj@gmail.com> (https://github.com/jedrzejginter)",
   "license": "MIT",
-  "types": "types.d.ts",
-  "dependencies": {
-    "hasha": "^5.2.2",
-    "sharp": "^0.27.1",
-    "shell-quote": "1.7.2"
+  "author": "Jedrzej Ginter <dzeejj@gmail.com> (https://github.com/jedrzejginter)",
+  "main": "index.js",
+  "engines": {
+    "node": "^12"
   },
   "scripts": {
     "eslint": "eslint --ext '.js,.ts' --ignore-pattern '!.*.js'",
     "lint": "yarn run eslint .",
     "typecheck": "tsc --noEmit"
   },
-  "engines": {
-    "node": "^12"
+  "dependencies": {
+    "hasha": "^5.2.2",
+    "sharp": "^0.27.1",
+    "shell-quote": "1.7.2"
   },
   "devDependencies": {
     "@babel/cli": "7.12.13",
     "@babel/core": "7.12.13",
-    "@ginterdev/toolkit": "0.1.0-rc9",
+    "@ginterdev/toolkit": "0.1.0-rc10",
     "@types/node": "14.14.25",
     "@typescript-eslint/eslint-plugin": "4.14.2",
     "@typescript-eslint/parser": "4.14.2",
@@ -36,5 +35,6 @@
     "prettier": "2.2.1",
     "prettier-plugin-package": "1.3.0",
     "typescript": "4.1.3"
-  }
+  },
+  "types": "types.d.ts"
 }

@@ -3,6 +3,8 @@ const { mkdirSync } = require('fs');
 const { join } = require('path');
 const { quote } = require('shell-quote');
 
+const cache = {};
+
 module.exports = function plugin(babel, options) {
   const { types: t } = babel;
 
@@ -30,16 +32,21 @@ module.exports = function plugin(babel, options) {
 
         const [filenameIn, query = ''] = filenamePath.split('?');
 
-        const r = execSync(
-          `node ${join(__dirname, 'resizer.js')} ${quote([
-            join(RESOLVE_DIR, filenameIn),
-            join(OUT_DIR),
-            query,
-          ])}`,
-          { stderr: 'inherit' },
-        );
+        let d = cache[filenamePath];
 
-        const d = JSON.parse(r.toString());
+        if (!d) {
+          const r = execSync(
+            `node ${join(__dirname, 'resizer.js')} ${quote([
+              join(RESOLVE_DIR, filenameIn),
+              join(OUT_DIR),
+              query,
+            ])}`,
+            { stderr: 'inherit' },
+          );
+
+          d = JSON.parse(r.toString());
+          cache[filenamePath] = d;
+        }
 
         const o = t.objectExpression([
           t.objectProperty(t.identifier('height'), t.numericLiteral(d.height)),

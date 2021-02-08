@@ -13,5 +13,6 @@ jobs:
       - uses: bahmutov/npm-install@v1
         with:
           install-command: yarn
+
       - run: yarn run lint
       - run: npx babel test.js
